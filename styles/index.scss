@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;1,700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    font-size: 62.5%;
+}
+
+.container {
+    background-image: url(https://images5.alphacoders.com/105/1052034.jpg);
+    background-size: cover;
+    background-position: center center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+
+    .content {
+        margin-top: 4rem;
+        width: 200rem;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        h1 {
+            font-family: "Fira Sans", sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: #fefcf9;
+        }
+
+        .timer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            .text {
+                font-size: 10rem;
+                margin: 0 8rem;
+                width: 5rem;
+            }
+            span {
+                color: #01176c;
+
+                font-size: 8rem;
+                font-family: "Fira Sans", sans-serif;
+                font-weight: 700;
+            }
+        }
+
+        .btn-container {
+            button {
+                margin: 6rem 4rem;
+                width: 12rem;
+                height: 4rem;
+                font-size: 1.8rem;
+                border: none;
+                font-family: "Fira Sans", sans-serif;
+                background: #fef2f4;
+                color: #01176c;
+                cursor: pointer;
+                transition: all 150ms ease-in-out;
+
+                &:hover {
+                    background: #01176c;
+                    color: #fef2f4;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1201px) {
+    html {
+        font-size: 50%;
+    }
+}
+
+@media (max-width: 963px) {
+    html {
+        font-size: 40%;
+    }
+}
+
+@media (max-width: 770px) {
+    html {
+        font-size: 35%;
+    }
+}
+
+@media (max-width: 673px) {
+    html {
+        font-size: 25%;
+    }
+}
+
+@media (max-width: 320px) {
+    html {
+        font-size: 50%;
+    }
+    .container {
+        width: 100vw;
+        .content {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .timer {
+                .text {
+                    font-size: 5rem;
+                    margin: 2rem 2rem;
+                }
+                span {
+                    font-size: 4rem;
+                    margin: 2rem 0;
+                }
+            }
+        }
+    }
+}
