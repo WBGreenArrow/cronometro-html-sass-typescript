@@ -117,120 +117,199 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"functions/milesSeconds.ts":[function(require,module,exports) {
-var data = {
+})({"functions/data.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.data = void 0;
+exports.data = {
   hours: 0,
   minuts: 0,
   seconds: 0,
   mileseconds: 0
 };
+},{}],"functions/renderTitle.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderTitle = void 0;
+
+var data_1 = require("../functions/data");
+
+var titleElement = document.getElementById("title");
+
+var renderTitle = function renderTitle() {
+  var title = (data_1.data.hours < 10 ? "0" + data_1.data.hours : data_1.data.hours) + ":" + (data_1.data.minuts < 10 ? "0" + data_1.data.minuts : data_1.data.minuts) + ":" + (data_1.data.seconds < 10 ? "0" + data_1.data.seconds : data_1.data.seconds);
+  titleElement.innerText = title;
+};
+
+exports.renderTitle = renderTitle;
+},{"../functions/data":"functions/data.ts"}],"functions/renderTime.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderTime = void 0;
+
+var data_1 = require("../functions/data");
+
 var hoursElement = document.getElementById("hours");
 var minutsElement = document.getElementById("minuts");
 var secondsElement = document.getElementById("seconds");
-var mileSecondsElement = document.getElementById("mileseconds");
-var btnElement = document.getElementById("btn");
-var btnCleanElement = document.getElementById("btn-clean");
-var isStarted = false;
-var timer;
+var mileSecondsElement = document.getElementById("mileseconds"); //render data chronometry
 
-function startChronometre() {
+var renderTime = function renderTime() {
+  if (data_1.data.hours < 10) {
+    hoursElement.innerText = "0" + String(data_1.data.hours);
+  } else {
+    hoursElement.innerText = String(data_1.data.hours);
+  }
+
+  if (data_1.data.minuts < 10) {
+    minutsElement.innerText = "0" + String(data_1.data.minuts);
+  } else {
+    minutsElement.innerText = String(data_1.data.minuts);
+  }
+
+  if (data_1.data.seconds < 10) {
+    secondsElement.innerText = "0" + String(data_1.data.seconds);
+  } else {
+    secondsElement.innerText = String(data_1.data.seconds);
+  }
+
+  if (data_1.data.mileseconds < 10) {
+    mileSecondsElement.innerText = "0" + String(data_1.data.mileseconds);
+  } else {
+    mileSecondsElement.innerText = String(data_1.data.mileseconds);
+  }
+};
+
+exports.renderTime = renderTime;
+},{"../functions/data":"functions/data.ts"}],"functions/initChronometry.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cleanCounter = exports.stopCounter = exports.startChronometry = exports.isStarted = void 0;
+
+var data_1 = require("../functions/data");
+
+var renderTitle_1 = require("../functions/renderTitle");
+
+var renderTime_1 = require("../functions/renderTime");
+
+var timer;
+var isStarted = false;
+exports.isStarted = isStarted;
+
+var startChronometry = function startChronometry() {
   var isCleanSeconds = false;
   var isCleanMinuts = false;
 
   if (!isStarted) {
     timer = setInterval(function () {
-      if (data.mileseconds == 99) {
-        if (data.seconds == 59) {
-          if (data.minuts == 59) {
-            data.minuts = 0;
-            data.hours++;
+      if (data_1.data.mileseconds == 99) {
+        if (data_1.data.seconds == 59) {
+          if (data_1.data.minuts == 59) {
+            data_1.data.minuts = 0;
+            data_1.data.hours++;
             isCleanMinuts = true;
           } //set minuts
 
 
           if (!isCleanMinuts) {
-            data.minuts++;
+            data_1.data.minuts++;
           }
 
           isCleanMinuts = false; // cleaning seconds
 
-          data.seconds = 0;
+          data_1.data.seconds = 0;
           isCleanSeconds = true;
         } // cleaning mileseconds
 
 
-        data.mileseconds = 0;
+        data_1.data.mileseconds = 0;
 
         if (!isCleanSeconds) {
           //set seconds
-          data.seconds++;
+          data_1.data.seconds++;
         }
 
         isCleanSeconds = false;
       } //set mileseconds
 
 
-      data.mileseconds++;
-      renderTime();
+      data_1.data.mileseconds++;
+      (0, renderTitle_1.renderTitle)();
+      (0, renderTime_1.renderTime)();
     }, 10);
   }
 
-  isStarted = !isStarted;
-}
+  exports.isStarted = isStarted = !isStarted;
+};
 
-function stopCounter() {
-  clearTimeout(timer);
-  isStarted = !isStarted;
-}
+exports.startChronometry = startChronometry;
+
+var stopCounter = function stopCounter() {
+  clearInterval(timer);
+  console.log(data_1.data);
+  exports.isStarted = isStarted = !isStarted;
+};
+
+exports.stopCounter = stopCounter; //clean chronometry
+
+var cleanCounter = function cleanCounter() {
+  (0, exports.stopCounter)();
+  exports.isStarted = isStarted = false;
+  data_1.data.hours = 0;
+  data_1.data.minuts = 0;
+  data_1.data.seconds = 0;
+  data_1.data.mileseconds = 0; //clean title chronometry
+
+  (0, renderTitle_1.renderTitle)(); //clean data chronometry
+
+  (0, renderTime_1.renderTime)();
+};
+
+exports.cleanCounter = cleanCounter;
+},{"../functions/data":"functions/data.ts","../functions/renderTitle":"functions/renderTitle.ts","../functions/renderTime":"functions/renderTime.ts"}],"functions/milesSeconds.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var initChronometry_1 = require("../functions/initChronometry");
+
+var initChronometry_2 = require("../functions/initChronometry");
+
+var initChronometry_3 = require("../functions/initChronometry");
+
+var initChronometry_4 = require("../functions/initChronometry");
+
+var btnElement = document.getElementById("btn");
+var btnCleanElement = document.getElementById("btn-clean"); // change text btn start || stop
 
 function changeBtnText() {
-  !isStarted ? btnElement.innerText = "Start" : btnElement.innerText = "Stop";
-}
+  !initChronometry_2.isStarted ? btnElement.innerText = "Start" : btnElement.innerText = "Stop";
+} //btn start || stop
 
-function cleanCounter() {
-  stopCounter();
-  isStarted = false;
-  data.hours = 0;
-  data.minuts = 0;
-  data.seconds = 0;
-  data.mileseconds = 0;
-  renderTime();
-}
-
-function renderTime() {
-  if (data.hours < 10) {
-    hoursElement.innerText = "0" + String(data.hours);
-  } else {
-    hoursElement.innerText = String(data.hours);
-  }
-
-  if (data.minuts < 10) {
-    minutsElement.innerText = "0" + String(data.minuts);
-  } else {
-    minutsElement.innerText = String(data.minuts);
-  }
-
-  if (data.seconds < 10) {
-    secondsElement.innerText = "0" + String(data.seconds);
-  } else {
-    secondsElement.innerText = String(data.seconds);
-  }
-
-  if (data.mileseconds < 10) {
-    mileSecondsElement.innerText = "0" + String(data.mileseconds);
-  } else {
-    mileSecondsElement.innerText = String(data.mileseconds);
-  }
-}
 
 btnElement.addEventListener("click", function () {
-  !isStarted ? startChronometre() : stopCounter();
+  !initChronometry_2.isStarted ? (0, initChronometry_1.startChronometry)() : (0, initChronometry_3.stopCounter)();
   changeBtnText();
-});
+}); //btn clean
+
 btnCleanElement.addEventListener("click", function () {
-  cleanCounter();
+  (0, initChronometry_4.cleanCounter)();
 });
-},{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../functions/initChronometry":"functions/initChronometry.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -258,7 +337,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62693" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51568" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

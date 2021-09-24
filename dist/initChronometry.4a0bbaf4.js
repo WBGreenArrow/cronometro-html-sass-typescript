@@ -117,79 +117,168 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"functions/data.ts":[function(require,module,exports) {
+"use strict";
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.data = void 0;
+exports.data = {
+  hours: 0,
+  minuts: 0,
+  seconds: 0,
+  mileseconds: 0
+};
+},{}],"functions/renderTitle.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderTitle = void 0;
+
+var data_1 = require("../functions/data");
+
+var titleElement = document.getElementById("title");
+
+var renderTitle = function renderTitle() {
+  var title = (data_1.data.hours < 10 ? "0" + data_1.data.hours : data_1.data.hours) + ":" + (data_1.data.minuts < 10 ? "0" + data_1.data.minuts : data_1.data.minuts) + ":" + (data_1.data.seconds < 10 ? "0" + data_1.data.seconds : data_1.data.seconds);
+  titleElement.innerText = title;
+};
+
+exports.renderTitle = renderTitle;
+},{"../functions/data":"functions/data.ts"}],"functions/renderTime.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderTime = void 0;
+
+var data_1 = require("../functions/data");
+
+var hoursElement = document.getElementById("hours");
+var minutsElement = document.getElementById("minuts");
+var secondsElement = document.getElementById("seconds");
+var mileSecondsElement = document.getElementById("mileseconds"); //render data chronometry
+
+var renderTime = function renderTime() {
+  if (data_1.data.hours < 10) {
+    hoursElement.innerText = "0" + String(data_1.data.hours);
+  } else {
+    hoursElement.innerText = String(data_1.data.hours);
   }
 
-  return bundleURL;
-}
-
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
+  if (data_1.data.minuts < 10) {
+    minutsElement.innerText = "0" + String(data_1.data.minuts);
+  } else {
+    minutsElement.innerText = String(data_1.data.minuts);
   }
 
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
-  };
-
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
+  if (data_1.data.seconds < 10) {
+    secondsElement.innerText = "0" + String(data_1.data.seconds);
+  } else {
+    secondsElement.innerText = String(data_1.data.seconds);
   }
 
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
+  if (data_1.data.mileseconds < 10) {
+    mileSecondsElement.innerText = "0" + String(data_1.data.mileseconds);
+  } else {
+    mileSecondsElement.innerText = String(data_1.data.mileseconds);
+  }
+};
 
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
+exports.renderTime = renderTime;
+},{"../functions/data":"functions/data.ts"}],"functions/initChronometry.ts":[function(require,module,exports) {
+"use strict";
 
-    cssTimeout = null;
-  }, 50);
-}
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cleanCounter = exports.stopCounter = exports.startChronometry = exports.isStarted = void 0;
 
-module.exports = reloadCSS;
-},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"styles/index.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
+var data_1 = require("../functions/data");
 
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var renderTitle_1 = require("../functions/renderTitle");
+
+var renderTime_1 = require("../functions/renderTime");
+
+var timer;
+var isStarted = false;
+exports.isStarted = isStarted;
+
+var startChronometry = function startChronometry() {
+  var isCleanSeconds = false;
+  var isCleanMinuts = false;
+
+  if (!isStarted) {
+    timer = setInterval(function () {
+      if (data_1.data.mileseconds == 99) {
+        if (data_1.data.seconds == 59) {
+          if (data_1.data.minuts == 59) {
+            data_1.data.minuts = 0;
+            data_1.data.hours++;
+            isCleanMinuts = true;
+          } //set minuts
+
+
+          if (!isCleanMinuts) {
+            data_1.data.minuts++;
+          }
+
+          isCleanMinuts = false; // cleaning seconds
+
+          data_1.data.seconds = 0;
+          isCleanSeconds = true;
+        } // cleaning mileseconds
+
+
+        data_1.data.mileseconds = 0;
+
+        if (!isCleanSeconds) {
+          //set seconds
+          data_1.data.seconds++;
+        }
+
+        isCleanSeconds = false;
+      } //set mileseconds
+
+
+      data_1.data.mileseconds++;
+      (0, renderTitle_1.renderTitle)();
+      (0, renderTime_1.renderTime)();
+    }, 10);
+  }
+
+  exports.isStarted = isStarted = !isStarted;
+};
+
+exports.startChronometry = startChronometry;
+
+var stopCounter = function stopCounter() {
+  clearInterval(timer);
+  console.log(data_1.data);
+  exports.isStarted = isStarted = !isStarted;
+};
+
+exports.stopCounter = stopCounter; //clean chronometry
+
+var cleanCounter = function cleanCounter() {
+  (0, exports.stopCounter)();
+  exports.isStarted = isStarted = false;
+  data_1.data.hours = 0;
+  data_1.data.minuts = 0;
+  data_1.data.seconds = 0;
+  data_1.data.mileseconds = 0; //clean title chronometry
+
+  (0, renderTitle_1.renderTitle)(); //clean data chronometry
+
+  (0, renderTime_1.renderTime)();
+};
+
+exports.cleanCounter = cleanCounter;
+},{"../functions/data":"functions/data.ts","../functions/renderTitle":"functions/renderTitle.ts","../functions/renderTime":"functions/renderTime.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -393,5 +482,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/styles.434540e1.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","functions/initChronometry.ts"], null)
+//# sourceMappingURL=/initChronometry.4a0bbaf4.js.map
