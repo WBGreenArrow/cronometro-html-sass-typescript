@@ -4,15 +4,16 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "parcel index.html"
+        "start": "parcel index.html",
+        "build": "parcel build index.html"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "parcel-bundler": "^1.12.5",
         "sass": "^1.42.1"
     },
     "devDependencies": {
-        "typescript": "^4.4.3"
+        "typescript": "^4.4.3",
+         "parcel-bundler": "^1.12.5"
     }
 }
