@@ -1,3 +1,4 @@
-### MovieList
-<p>List of movie made with pure HTML, CSS and JavaScript </p>
-<img src="Chronometry.gif" alt="gif-exemple">
+### Chronometer
+<p>Cronômetro feito com HTML, Sass e TypeScript </p>
+<p>Link do projeto: https://peaceful-golick-4c8799.netlify.app </p>
+<img src="Cronometry.gif" alt="gif-exemple">
